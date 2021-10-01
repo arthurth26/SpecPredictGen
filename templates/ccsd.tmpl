@@ -1,0 +1,24 @@
+$basis
+%maxcore $maxcore
+
+%pal
+nprocs $nprocs
+end
+
+%mdci
+Nroots $nroots
+Iroot 1
+Dorootwise true
+OTHRESH 0.0005
+VTHRESH 0.0005
+TCutPNOSingles 6.6e-10
+NDAV 400
+Maxiter 2000
+DLPNOActSpace true
+DostoreSTEOM true
+DTol 1e-5
+end
+
+*xyz $charge $multiplicity
+$geometry
+*

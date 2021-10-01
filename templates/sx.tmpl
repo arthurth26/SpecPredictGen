@@ -1,0 +1,24 @@
+$basis
+%maxcore $maxcore
+
+%pal
+nprocs $nprocs
+end
+
+%tddft
+nroots=$nroots
+iroot=$iroot
+tda false
+end
+
+%esd
+GSHESSIAN "${prefix}_gs.hess"
+hessflag $hessflag
+unit nm
+LINES gaussian
+USEJ $usej
+end
+
+*xyz $charge $multiplicity
+$geometry
+* 
