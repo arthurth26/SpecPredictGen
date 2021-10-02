@@ -51,13 +51,16 @@ def main():
     with (templates / 'sx.tmpl').open('r') as f:
         tmpl = f.read()
         n = int(config['common']['nroots'])
+        hessname = config['paths']['hessFileName'] or f'{outputPrefix}_gs.hess'
+        if re.match('^.*\.\w+$', hessname) == None:
+            hessname = hessname + '.hess'
         for i in range(1, n+1):
             sx = Template(tmpl).substitute({
                 **config['common'],
                 **config['sx'],
                 'iroot': i,
                 'geometry': geometry,
-                'prefix': outputPrefix
+                'hessname': hessname
             })
             with (outputFolder / f'{outputPrefix}_s{i}.inp').open('w') as sxInp:
                 sxInp.write(sx)
