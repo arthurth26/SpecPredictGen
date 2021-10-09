@@ -22,9 +22,9 @@ def main():
     config.read('SpecPredictGen.conf')
 
     orca = Path(config['paths']['orca'])
-    outputPrefix = config['paths']['outputPrefix']
-    outputFolder = Path(config['paths']['outputFolder'])
-    outputFolder.mkdir(exist_ok=True)
+    moleculeName = config['paths']['moleculeName']
+    moleculeFolder = Path(config['paths']['moleculeFolder'] or (Path('.') / moleculeName))
+    moleculeFolder.mkdir(exist_ok=True)
 
     templates = Path(config['paths']['templates'])
 
@@ -36,7 +36,7 @@ def main():
             **config['ccsd'],
             'geometry': geometry
         })
-        with (outputFolder / f'{outputPrefix}_ccsd.inp').open('w') as ccsdInp:
+        with (moleculeFolder / f'{moleculeName}_ccsd.inp').open('w') as ccsdInp:
             ccsdInp.write(ccsd)
 
     with (templates / 'gs.tmpl').open('r') as f:
@@ -45,13 +45,13 @@ def main():
             **config['gs'],
             'geometry': geometry
         })
-        with (outputFolder / f'{outputPrefix}_gs.inp').open('w') as gsInp:
+        with (moleculeFolder / f'{moleculeName}_gs.inp').open('w') as gsInp:
             gsInp.write(gs)
 
     with (templates / 'sx.tmpl').open('r') as f:
         tmpl = f.read()
         n = int(config['common']['nroots'])
-        hessname = config['paths']['hessFileName'] or f'{outputPrefix}_gs.hess'
+        hessname = config['paths']['hessFileName'] or f'{moleculeName}_gs.hess'
         if re.match('^.*\.\w+$', hessname) == None:
             hessname = hessname + '.hess'
         for i in range(1, n+1):
@@ -62,7 +62,7 @@ def main():
                 'geometry': geometry,
                 'hessname': hessname
             })
-            with (outputFolder / f'{outputPrefix}_s{i}.inp').open('w') as sxInp:
+            with (moleculeFolder / f'{moleculeName}_s{i}.inp').open('w') as sxInp:
                 sxInp.write(sx)
 
 if __name__ == '__main__':
