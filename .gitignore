@@ -1,0 +1,9 @@
+*.out
+*.inp
+*.spectrum
+*.csv
+*.hess
+*.cis
+*.densities
+*.txt
+*.gbw
