@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 from configparser import ConfigParser
 from pathlib import Path
-import re
 from decimal import Decimal
 import csv
-
-specRegex = re.compile(r'^([\d\.]+)\s+([\d\.e+-]+)\s+[\d\.e+-]+\s+[\d\.e+-]+$', re.MULTILINE)
 
 def getSpecData(moleculeFolder: Path, moleculeName: str):
     i = 1
@@ -14,7 +11,8 @@ def getSpecData(moleculeFolder: Path, moleculeName: str):
         if not path.exists():
             break
         with path.open('r') as f:
-            yield (i, [tuple(Decimal(g) for g in m.groups()) for m in specRegex.finditer(f.read())])
+            f.readline()
+            yield (i, [tuple(Decimal(x) for x in l.split()[:2]) for l in f.readlines()])
             i += 1
 
 def expf(v): 
