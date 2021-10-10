@@ -37,16 +37,20 @@ def main():
         if (i == 1):
             specs = {row[0]: [row[1]] for row in spec}
             rows = {row[0]: {'WL (nm)': floatf(row[0]), 'S1': expf(row[1])} for row in spec}
+            wls = rows.keys()
+            minWl = min(wls)
         else:
             for row in spec:
                 wl = row[0]
                 st = row[1]
-                if wl in rows:
+                if wl >= minWl and wl in rows:
                     key = f'S{i}'
                     rows[wl][key] = expf(st)
                     specs[wl].append(st)
                     if key not in fieldNames:
                         fieldNames.append(key)
+                elif wl >= minWl:
+                    print(f'WARNING: Wavelength {wl} in S{i} not matched')
     
     maxSpec = 0
     specTotals = {}
