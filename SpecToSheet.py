@@ -24,7 +24,6 @@ def floatf(v):
 WL_KEY = 'WL (nm)'
 STOT_KEY = 'S(tot)'
 NORM_KEY = 'Normalized'
-SHIFT_KEY = 'Shifted'
 
 def main():
     config = ConfigParser(comment_prefixes=('#', ';'), inline_comment_prefixes=('#', ';'))
@@ -33,7 +32,6 @@ def main():
     moleculeName = config['paths']['moleculeName']
     moleculeFolder = Path(config['paths']['moleculeFolder'] or (Path('.') / moleculeName))
 
-    shift = Decimal(config['vars']['shift'])
     normMin = Decimal(config['vars']['normMin'])
     normMax = Decimal(config['vars']['normMax'])
 
@@ -62,7 +60,6 @@ def main():
 
     fieldNames.append(STOT_KEY)
     fieldNames.append(NORM_KEY)
-    fieldNames.append(SHIFT_KEY)
 
     maxSpec = 0
     specTotals = {}
@@ -75,10 +72,9 @@ def main():
     print('Calculate S(max)')
     maxSpec = max( specTotals[wl] for wl in specTotals if wl >= normMin and wl <= normMax )
 
-    print('Calculate normalized/shifted values')
+    print('Calculate normalized values')
     for wl in rows:
         rows[wl][NORM_KEY] = expf(specTotals[wl] / maxSpec)
-        rows[wl][SHIFT_KEY] = floatf(wl + shift)
 
     outFilePath = moleculeFolder / f'{moleculeName}.csv'
     print(f'Write {outFilePath}')
