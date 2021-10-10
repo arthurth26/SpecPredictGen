@@ -83,7 +83,9 @@ def main():
     outFilePath = moleculeFolder / f'{moleculeName}.csv'
     print(f'Write {outFilePath}')
     with (outFilePath).open('w') as csvFile:
-        writer = csv.DictWriter(csvFile, fieldnames=fieldNames)
+        dialect = csv.excel
+        dialect.lineterminator = '\n'
+        writer = csv.DictWriter(csvFile, fieldnames=fieldNames, dialect=dialect)
         writer.writeheader()
         writer.writerows(rows[wl] for wl in rows)
 
