@@ -31,8 +31,8 @@ After generating your .spectrum files, will create a .csv out of the data
 
 1. Fill out `[paths]` like so:
 ```
-moleculeName = MoleculeName
-moleculeFolder = .\MoleculeName # defaults to the value of moleculeName in the current folder
+moleculeName = MoleculeName #Put the name of the file before the _sX, for example, for Caffeine_s1.spectrum, put "Caffeine" 
+moleculeFolder = .\MoleculeName # Insert the Path to the folder with the .spectrum files in it.
 ```
 
 2. Edit `[vars]` as needed
