@@ -34,6 +34,8 @@ def main():
     moleculeFolder = Path(config['paths']['moleculeFolder'] or (Path('.') / moleculeName))
 
     shift = Decimal(config['vars']['shift'])
+    normMin = Decimal(config['vars']['normMin'])
+    normMax = Decimal(config['vars']['normMax'])
 
     fieldNames = [WL_KEY, 'S1']
 
@@ -71,7 +73,7 @@ def main():
         rows[wl][STOT_KEY] = expf(specTotals[wl])
     
     print('Calculate S(max)')
-    maxSpec = max(specTotals[wl] for wl in specTotals)
+    maxSpec = max( specTotals[wl] for wl in specTotals if wl >= normMin and wl <= normMax )
 
     print('Calculate normalized/shifted values')
     for wl in rows:
