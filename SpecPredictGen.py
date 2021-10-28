@@ -4,31 +4,34 @@ import re
 from configparser import ConfigParser
 from string import Template
 
-coordHeader = '''---------------------------------
-CARTESIAN COORDINATES (ANGSTROEM)
----------------------------------
-'''
-emptyLine = re.compile('^$', re.MULTILINE)
+coordHeader = re.compile(r'^(\d+)(?:\n|\r\n?)Coordinates from [^\r\n]+(?:\n|\r\n?)', re.MULTILINE)
+newLine = re.compile('(?:\n|\r\n?)', re.MULTILINE)
 
 def getOrcaCoords(path):
     with path.open('r') as f:
         content = f.read()
-        coordPos = content.rfind(coordHeader) + len(coordHeader)
-        coordEndPos = emptyLine.search(content, coordPos).start()-1
+        for match in coordHeader.finditer(content):
+            pass
+        n = int(match.group(1))
+        coordPos = match.end()
+        for i, endMatch in enumerate(newLine.finditer(content, coordPos), start=1):
+            if i == n:
+                break
+        coordEndPos = endMatch.start()
         return content[coordPos:coordEndPos]
 
 def main():
     config = ConfigParser(comment_prefixes=('#', ';'), inline_comment_prefixes=('#', ';'))
     config.read('SpecPredictGen.conf')
 
-    orca = Path(config['paths']['orca'])
     moleculeName = config['paths']['moleculeName']
     moleculeFolder = Path(config['paths']['moleculeFolder'] or (Path('.') / moleculeName))
     moleculeFolder.mkdir(exist_ok=True)
+    coordsFile = Path(config['paths']['coordsFile'] or (moleculeFolder / f'{moleculeName}.xyz'))
 
     templates = Path(config['paths']['templates'])
 
-    geometry = getOrcaCoords(orca)
+    geometry = getOrcaCoords(coordsFile)
 
     with (templates / 'ccsd.tmpl').open('r') as f:
         ccsd = Template(f.read()).substitute({

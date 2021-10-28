@@ -7,3 +7,6 @@
 *.densities
 *.txt
 *.gbw
+*.xyz
+*.engrad
+*.opt
