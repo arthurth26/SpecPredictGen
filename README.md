@@ -4,26 +4,19 @@ Creates ORCA input files for predicting vibronic spectra
 
 ## Usage
 
-1. Name your optimized `ORCA.out` file `[MoleculeName].out`
+1. Put the folder containing all your molecule files in the `SpecPredictGen` folder (optional)
 
-2. Put your optimized `ORCA.out` file into the `SpecPredictGen` folder (optional)
-
-3. Open `SpecPredictGen.conf`
-
-4. If your ORCA.out is in this folder, simply put
-`.\MoleculeName.out` into the orca field
-
-5. Otherwise, fill `[paths]` in like so:
+2. Edit SpecPredictGen.conf, fill `[paths]` in like so:
 ```
-orca = path\to\orca.out
-moleculeName = MoleculeName # Molecule Name
-moleculeFolder = .\MoleculeName # Where to output .inp files, defaults to the value of moleculeName in the current folder
+moleculeName = MoleculeName # Molecule Name, required
+moleculeFolder = .\MoleculeName # Where to output .inp files, when left blank, defaults to the value of moleculeName in the `SpecPredictGen` folder
+coordsFile = .\MoleculeName\MoleculeName.xyz # where your xyz file is located, when left blank, defaults to {moleculeName}.xyz in your molecule folder
 hessFileName = MoleculeName_gs.hess # Name of .hess file to target, defaults to {moleculeName}_gs.hess
 ```
 
-6. Edit all other fields as needed. 
+3. Edit all other fields as needed. 
 
-7. Run `SpecPredictGen.py`, the generated files will be created in the `moleculeFolder` 
+4. Run `SpecPredictGen.py`, the generated files will be created in the `moleculeFolder` 
 
 ## SpecToSheet Usage
 
