@@ -4,17 +4,13 @@ from pathlib import Path
 from decimal import Decimal
 import csv
 
-def getSpecData(moleculeFolder: Path, moleculeName: str):
-    i = 1
-    while True:
-        path = (moleculeFolder / f'{moleculeName}_s{i}.spectrum')
-        if not path.exists():
-            break
-        with path.open('r') as f:
-            print(f'Parse S{i}')
+def getSpecData(moleculeFolder: Path, moleculeName: str, NumOfCalc: int):
+    for number_of_spec_calc in range(1,NumOfCalc+1):
+        path = f'{moleculeFolder}/{moleculeName}_{number_of_spec_calc}.spectrum'
+        with open(path,"r") as f:
+            print(f'Parse S{number_of_spec_calc}')
             f.readline()
-            yield (i, [tuple(Decimal(x) for x in l.split()[:2]) for l in f.readlines()])
-            i += 1
+            yield (number_of_spec_calc, [tuple(Decimal(x) for x in l.split()[:2]) for l in f.readlines()])
 
 def expf(v): 
     return '{:0.6e}'.format(v)
@@ -30,14 +26,15 @@ def main():
     config.read('SpecToSheet.conf')
 
     moleculeName = config['paths']['moleculeName']
-    moleculeFolder = Path(config['paths']['moleculeFolder'] or (Path('.') / moleculeName))
+    moleculeFolder = Path(config['paths']['moleculeFolder'])
 
     normMin = Decimal(config['vars']['normMin'])
     normMax = Decimal(config['vars']['normMax'])
+    NumOfCalc = Decimal(config['vars']['Number_of_calculations'])
 
     fieldNames = [WL_KEY, 'S1']
 
-    for i, spec in getSpecData(moleculeFolder, moleculeName):
+    for i, spec in getSpecData(moleculeFolder, moleculeName, int(NumOfCalc)):
         if (i == 1):
             specs = {row[0]: [row[1]] for row in spec}
             rows = {row[0]: {WL_KEY: floatf(row[0]), 'S1': expf(row[1])} for row in spec}
